@@ -1,0 +1,24 @@
+{
+  "name": "vibe-ops",
+  "owner": {
+    "name": "Infinity Quest"
+  },
+  "metadata": {
+    "description": "A collection of Claude Code skills designed for operations teams - macOS app installation, video processing, and more",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "vibe-ops",
+      "source": ".",
+      "description": "Skills for operations teams: macOS app installation, video concatenation, video trimming",
+      "version": "0.1.0",
+      "author": {
+        "name": "Infinity Quest"
+      },
+      "repository": "https://github.com/InfQuest/vibe-ops-plugin",
+      "license": "MIT",
+      "keywords": ["macos", "homebrew", "video", "ffmpeg", "automation"]
+    }
+  ]
+}

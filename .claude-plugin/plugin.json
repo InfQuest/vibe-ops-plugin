@@ -1,0 +1,13 @@
+{
+  "name": "vibe-ops",
+  "description": "A Claude Code plugin for vibe-driven operations and developer workflow automation",
+  "version": "0.1.0",
+  "author": {
+    "name": "Infinity Quest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InfQuest/vibe-ops-plugin"
+  },
+  "license": "MIT"
+}
