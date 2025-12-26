@@ -1,47 +1,54 @@
 # Vibe Ops Plugin
 
-A Claude Code plugin for vibe-driven operations and developer workflow automation.
+A collection of Claude Code skills designed for operations teams - macOS app installation, video processing, and more.
 
 ## Installation
 
 ```bash
-# Install from local directory
-claude /plugin install ./vibe-ops-plugin
+# Add marketplace
+/plugin marketplace add InfQuest/vibe-ops-plugin
 
-# Or test during development
-claude --plugin-dir ./vibe-ops-plugin
+# Install plugin
+/plugin install vibe-ops@vibe-ops
 ```
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `/vibe-ops:hello` | Greet and introduce plugin capabilities |
-| `/vibe-ops:status` | Check project status and provide summary |
 
 ## Skills
 
-- **code-review**: Automated code review that analyzes changes and provides feedback
+| Skill | Description | Triggers |
+|-------|-------------|----------|
+| **install-app** | macOS app installation with Homebrew (auto-installs Homebrew if needed, configures USTC mirror) | 安装, install, 帮我装 |
+| **video-concat** | Merge multiple video files into one | 合并视频, 拼接视频, merge videos |
+| **video-trim** | Trim video segments with compression options | 剪辑视频, 裁剪视频, trim video |
+
+## Usage Examples
+
+```
+帮我安装 Chrome
+把这几个视频合并成一个
+裁剪视频从 1:30 到 3:45
+```
 
 ## Development
 
-### Prerequisites
-- Claude Code CLI installed
-- Git for version control
-
 ### Local Testing
+
 ```bash
-cd vibe-ops-plugin
 claude --plugin-dir .
 ```
 
 ### Project Structure
+
 ```
-├── .claude-plugin/plugin.json  # Plugin manifest
-├── commands/                   # Slash commands
-├── skills/                     # Agent skills
-├── hooks/                      # Event handlers
-└── CLAUDE.md                   # Project docs for Claude
+vibe-ops-plugin/
+├── .claude-plugin/
+│   ├── plugin.json        # Plugin manifest
+│   └── marketplace.json   # Marketplace config
+├── skills/
+│   ├── install-app/       # macOS app installation
+│   ├── video-concat/      # Video merging
+│   └── video-trim/        # Video trimming
+├── CLAUDE.md
+└── README.md
 ```
 
 ## License
