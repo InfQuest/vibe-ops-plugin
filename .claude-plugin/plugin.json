@@ -5,9 +5,6 @@
   "author": {
     "name": "Infinity Quest"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/InfQuest/vibe-ops-plugin"
-  },
+  "repository": "https://github.com/InfQuest/vibe-ops-plugin",
   "license": "MIT"
 }
