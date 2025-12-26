@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "vibe-ops",
-      "source": ".",
+      "source": "./",
       "description": "Skills for operations teams: macOS app installation, video concatenation, video trimming",
       "version": "0.1.0",
       "author": {
