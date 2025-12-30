@@ -9,7 +9,7 @@ description: 使用 Whisper 将音频/视频转换为文字，支持词级别时
 
 ## Prerequisites
 
-1. 需要安装 Python 3.10+
+1. 需要安装 Python 3.12
 2. 需要安装 uv（如果未安装，请使用 `install-app` skill 来安装）
 
 ## Usage

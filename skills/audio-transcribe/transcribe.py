@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script --python 3.12
 # /// script
-# requires-python = ">=3.10,<3.13"
+# requires-python = "==3.12.*"
 # dependencies = [
 #     "torch==2.3.1",
 #     "torchaudio==2.3.1",
