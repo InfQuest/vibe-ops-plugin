@@ -9,18 +9,7 @@ description: 裁剪视频片段，支持压缩、音频控制等选项。Use whe
 
 ## Prerequisites
 
-确保系统已安装 ffmpeg：
-
-```bash
-# macOS
-brew install ffmpeg
-
-# Ubuntu/Debian
-sudo apt-get install ffmpeg
-
-# Windows (with chocolatey)
-choco install ffmpeg
-```
+需要安装 ffmpeg。如果未安装，请使用 `install-app` skill 来安装。
 
 ## Usage
 
@@ -38,9 +27,7 @@ When the user wants to trim a video: $ARGUMENTS
 which ffmpeg && ffmpeg -version | head -1 || echo "NOT_INSTALLED"
 ```
 
-如果未安装，提示用户安装：
-- macOS: `brew install ffmpeg`
-- Linux: `sudo apt-get install ffmpeg`
+如果未安装，使用 `install-app` skill 来安装 ffmpeg。告诉用户：「需要先安装 ffmpeg，我来帮你安装。」然后调用 install-app skill 安装 ffmpeg。
 
 ### Step 2: 获取输入文件
 

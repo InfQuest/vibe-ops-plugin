@@ -1,14 +1,21 @@
 # Vibe Ops Plugin
 
+> Version: 0.1.0
+
 面向非技术用户的 Claude Code 插件，提供常用操作的自动化技能。
 
 ## Project Structure
 
 ```
 vibe-ops-plugin/
+├── .claude/
+│   └── commands/
+│       └── release.md    # 发布新版本命令
 ├── .claude-plugin/
 │   └── plugin.json       # Plugin manifest (required)
 ├── skills/
+│   ├── image-gen/        # AI 图片生成
+│   │   └── SKILL.md
 │   ├── install-app/      # macOS 软件安装
 │   │   └── SKILL.md
 │   ├── video-concat/     # 视频合并
@@ -23,9 +30,16 @@ vibe-ops-plugin/
 
 | Skill | 功能 | 触发词 |
 |-------|------|--------|
+| image-gen | AI 图片生成（OpenRouter API） | 生成图片、画图、generate image |
 | install-app | macOS 软件安装（自动处理 Homebrew） | 安装、install、帮我装 |
 | video-concat | 合并多个视频文件 | 合并视频、拼接视频、merge videos |
 | video-trim | 裁剪视频片段 | 剪辑视频、裁剪视频、trim video |
+
+## Commands
+
+| Command | 功能 |
+|---------|------|
+| /release | 发布新版本：升级小版本号，创建 PR 到 main |
 
 ## Adding Skills
 

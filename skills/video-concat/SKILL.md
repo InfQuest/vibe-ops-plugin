@@ -9,18 +9,7 @@ Merge multiple video files into a single video using ffmpeg.
 
 ## Prerequisites
 
-Ensure ffmpeg is installed on the system:
-
-```bash
-# macOS
-brew install ffmpeg
-
-# Ubuntu/Debian
-sudo apt-get install ffmpeg
-
-# Windows (with chocolatey)
-choco install ffmpeg
-```
+需要安装 ffmpeg。如果未安装，请使用 `install-app` skill 来安装。
 
 ## Usage
 
@@ -38,9 +27,7 @@ First, verify ffmpeg is installed:
 which ffmpeg && ffmpeg -version | head -1 || echo "NOT_INSTALLED"
 ```
 
-If not installed, offer to install it for the user:
-- macOS: `brew install ffmpeg`
-- Linux: `sudo apt-get install ffmpeg`
+如果未安装，使用 `install-app` skill 来安装 ffmpeg。告诉用户：「需要先安装 ffmpeg，我来帮你安装。」然后调用 install-app skill 安装 ffmpeg。
 
 ### Step 2: Get Input Files
 
