@@ -46,7 +46,7 @@ which node && node --version || echo "NOT_INSTALLED"
 
 2. **模型选择**：选择使用哪个 AI 模型
    - 选项：
-     - "Gemini Pro - Google 图片生成模型 (Recommended)"
+     - "Gemini 2.5 Flash Image - Google 图片生成模型 (Recommended)"
      - "Seedream 4.5 - 字节跳动高质量模型"
 
 3. **图片尺寸**：选择输出尺寸
@@ -67,135 +67,27 @@ which node && node --version || echo "NOT_INSTALLED"
    - 建议默认：当前目录，文件名为 `generated_image_时间戳.png`
    - 让用户可以自定义路径
 
-### Step 4: 构建并执行 Node.js 脚本
+### Step 4: 执行脚本
 
-根据用户选择，创建并执行以下 Node.js 脚本：
-
-```javascript
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
-
-// 配置
-const API_KEY = process.env.OPENROUTER_API_KEY;
-const MODEL = process.argv[2] || 'gemini-pro';
-const PROMPT = process.argv[3] || 'A beautiful sunset over mountains';
-const WIDTH = parseInt(process.argv[4]) || 1024;
-const HEIGHT = parseInt(process.argv[5]) || 1024;
-const NUM_IMAGES = parseInt(process.argv[6]) || 1;
-const OUTPUT_DIR = process.argv[7] || '.';
-
-// 模型映射
-const MODEL_MAP = {
-  'gemini-pro': 'google/gemini-3-pro-image-preview',
-  'seedream': 'bytedance-seed/seedream-4.5'
-};
-
-const modelId = MODEL_MAP[MODEL] || MODEL;
-
-console.log(`🎨 开始生成图片...`);
-console.log(`📝 提示词: ${PROMPT}`);
-console.log(`🤖 模型: ${modelId}`);
-console.log(`📐 尺寸: ${WIDTH}x${HEIGHT}`);
-console.log(`🔢 数量: ${NUM_IMAGES}`);
-
-const requestData = JSON.stringify({
-  model: modelId,
-  prompt: PROMPT,
-  n: NUM_IMAGES,
-  size: `${WIDTH}x${HEIGHT}`,
-  response_format: 'b64_json'
-});
-
-const options = {
-  hostname: 'openrouter.ai',
-  port: 443,
-  path: '/api/v1/images/generations',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${API_KEY}`,
-    'HTTP-Referer': 'https://github.com/vibe-ops',
-    'X-Title': 'Vibe Ops Image Generator'
-  }
-};
-
-const req = https.request(options, (res) => {
-  let data = '';
-
-  res.on('data', (chunk) => {
-    data += chunk;
-  });
-
-  res.on('end', () => {
-    try {
-      const response = JSON.parse(data);
-
-      if (response.error) {
-        console.error(`❌ API 错误: ${response.error.message || JSON.stringify(response.error)}`);
-        process.exit(1);
-      }
-
-      if (!response.data || response.data.length === 0) {
-        console.error('❌ 未能生成图片');
-        console.error('响应:', data);
-        process.exit(1);
-      }
-
-      // 保存图片
-      const timestamp = Date.now();
-      response.data.forEach((item, index) => {
-        const filename = NUM_IMAGES === 1
-          ? `generated_image_${timestamp}.png`
-          : `generated_image_${timestamp}_${index + 1}.png`;
-        const filepath = path.join(OUTPUT_DIR, filename);
-
-        const imageBuffer = Buffer.from(item.b64_json, 'base64');
-        fs.writeFileSync(filepath, imageBuffer);
-        console.log(`✅ 图片已保存: ${filepath}`);
-      });
-
-      console.log(`\n🎉 完成！共生成 ${response.data.length} 张图片`);
-
-    } catch (e) {
-      console.error('❌ 解析响应失败:', e.message);
-      console.error('原始响应:', data);
-      process.exit(1);
-    }
-  });
-});
-
-req.on('error', (e) => {
-  console.error(`❌ 请求失败: ${e.message}`);
-  process.exit(1);
-});
-
-req.write(requestData);
-req.end();
-```
-
-### Step 5: 执行脚本
-
-将上述脚本保存为临时文件并执行：
+使用 skill 目录下的 `image-gen.js` 脚本：
 
 ```bash
-# 创建临时脚本
-cat > /tmp/image_gen.js << 'SCRIPT'
-// ... 上面的脚本内容 ...
-SCRIPT
-
-# 执行脚本
-node /tmp/image_gen.js "MODEL" "PROMPT" WIDTH HEIGHT NUM_IMAGES "OUTPUT_DIR"
+node /path/to/skills/image-gen/image-gen.js "MODEL" "PROMPT" WIDTH HEIGHT NUM_IMAGES "OUTPUT_DIR"
 ```
 
-其中参数说明：
+参数说明：
 - MODEL: gemini-pro / seedream
 - PROMPT: 用户的图片描述
 - WIDTH/HEIGHT: 图片尺寸
 - NUM_IMAGES: 生成数量
 - OUTPUT_DIR: 保存目录
 
-### Step 6: 展示结果
+示例：
+```bash
+node skills/image-gen/image-gen.js "gemini-pro" "一只在星空下的猫" 1024 1024 1 "."
+```
+
+### Step 5: 展示结果
 
 生成完成后：
 
