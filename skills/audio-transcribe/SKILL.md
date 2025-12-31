@@ -93,6 +93,7 @@ uv run /path/to/skills/audio-transcribe/transcribe.py "INPUT_FILE" [OPTIONS]
 - `--model`, `-m`: 模型大小 (tiny/base/small/medium/large-v2)
 - `--language`, `-l`: 语言代码 (en/zh/ja/...)，不指定则自动检测
 - `--no-align`: 跳过词级别对齐
+- `--no-vad`: 禁用 VAD 过滤（如果转录有时间跳跃/遗漏，使用此选项）
 - `--output`, `-o`: 输出文件路径
 - `--format`, `-f`: 输出格式 (srt/vtt/txt/json)
 
@@ -110,6 +111,9 @@ uv run skills/audio-transcribe/transcribe.py "audio.wav" --no-align -o "transcri
 
 # 使用更大模型，输出 JSON（含词级别时间戳）
 uv run skills/audio-transcribe/transcribe.py "speech.mp3" -m medium -f json -o "result.json"
+
+# 禁用 VAD 过滤（解决时间跳跃/遗漏问题）
+uv run skills/audio-transcribe/transcribe.py "audio.mp3" --no-vad -o "transcript.txt"
 ```
 
 ### Step 5: 展示结果
