@@ -9,7 +9,8 @@ description: 使用 yt-dlp 下载 YouTube 视频、音频或字幕。Use when us
 
 ## Prerequisites
 
-需要安装 yt-dlp。如果未安装，请使用 `install-app` skill 来安装。
+1. 需要安装 yt-dlp（如果未安装，请使用 `install-app` skill 来安装）
+2. 需要安装 ffmpeg（用于合并视频和音频流）
 
 ## Usage
 
@@ -185,7 +186,7 @@ ls -la "OUTPUT_PATH"
 
 **地区限制**：
 - 提示用户可能需要使用代理
-- 使用 `--geo-bypass` 尝试绑过限制
+- 使用 `--geo-bypass` 尝试绕过限制
 
 **下载失败**：
 - 检查 URL 是否正确
