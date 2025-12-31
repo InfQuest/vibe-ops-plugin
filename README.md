@@ -22,6 +22,7 @@ A collection of Claude Code skills designed for operations teams - macOS app ins
 | **install-app** | macOS app installation with Homebrew (auto-installs Homebrew if needed, configures USTC mirror) | 安装, install, 帮我装 |
 | **video-concat** | Merge multiple video files into one | 合并视频, 拼接视频, merge videos |
 | **video-trim** | Trim video segments with compression options | 剪辑视频, 裁剪视频, trim video |
+| **youtube-download** | Download YouTube/Bilibili videos using yt-dlp with Chrome cookies | 下载视频, download youtube, 下载B站 |
 
 ## Usage Examples
 
@@ -32,6 +33,7 @@ A collection of Claude Code skills designed for operations teams - macOS app ins
 帮我安装 Chrome
 把这几个视频合并成一个
 裁剪视频从 1:30 到 3:45
+帮我下载这个 YouTube 视频
 ```
 
 ## Development
@@ -55,7 +57,8 @@ vibe-ops-plugin/
 │   ├── image-gen/         # AI image generation
 │   ├── install-app/       # macOS app installation
 │   ├── video-concat/      # Video merging
-│   └── video-trim/        # Video trimming
+│   ├── video-trim/        # Video trimming
+│   └── youtube-download/  # YouTube/Bilibili download
 ├── CLAUDE.md
 └── README.md
 ```

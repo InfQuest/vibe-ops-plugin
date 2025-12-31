@@ -1,6 +1,6 @@
 # Vibe Ops Plugin
 
-> Version: 0.2.0
+> Version: 0.3.0
 
 面向非技术用户的 Claude Code 插件，提供常用操作的自动化技能。
 
@@ -25,7 +25,9 @@ vibe-ops-plugin/
 │   │   └── SKILL.md
 │   ├── video-concat/     # 视频合并
 │   │   └── SKILL.md
-│   └── video-trim/       # 视频裁剪
+│   ├── video-trim/       # 视频裁剪
+│   │   └── SKILL.md
+│   └── youtube-download/ # YouTube 下载
 │       └── SKILL.md
 ├── CLAUDE.md             # This file
 └── README.md             # Documentation
@@ -41,6 +43,7 @@ vibe-ops-plugin/
 | install-app | macOS 软件安装（自动处理 Homebrew） | 安装、install、帮我装 |
 | video-concat | 合并多个视频文件 | 合并视频、拼接视频、merge videos |
 | video-trim | 裁剪视频片段 | 剪辑视频、裁剪视频、trim video |
+| youtube-download | YouTube/B站视频下载（yt-dlp） | 下载视频、download youtube、下载B站 |
 
 ## Commands
 
