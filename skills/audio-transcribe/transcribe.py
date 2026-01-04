@@ -57,6 +57,7 @@ def transcribe_audio(
     batch_size: int = 8,
     align: bool = True,
     device: str = "cpu",
+    vad_filter: bool = True,
 ) -> List[TranscriptSegment]:
     """Transcribe audio file using WhisperX with optional word-level timestamps.
 
@@ -67,6 +68,7 @@ def transcribe_audio(
         batch_size: Batch size for processing.
         align: If True, perform word-level forced alignment.
         device: Device to use ("cpu" or "cuda").
+        vad_filter: If True, use VAD to filter non-speech segments.
 
     Returns:
         List of TranscriptSegment objects.
@@ -77,11 +79,27 @@ def transcribe_audio(
         raise FileNotFoundError(f"Audio file not found: {audio_path}")
 
     compute_type = "int8" if device == "cpu" else "float16"
+    asr_options = {"suppress_numerals": False}
 
     print(f"Loading WhisperX model: {model_name} (device={device})")
-    model = whisperx.load_model(model_name, device=device, compute_type=compute_type)
+
+    # VAD options - lower onset/offset = more sensitive (catches more speech)
+    vad_options = None
+    if not vad_filter:
+        # Very low thresholds to catch almost everything
+        vad_options = {"vad_onset": 0.1, "vad_offset": 0.1}
+
+    model = whisperx.load_model(
+        model_name,
+        device=device,
+        compute_type=compute_type,
+        asr_options=asr_options,
+        vad_options=vad_options,
+    )
 
     print(f"Transcribing: {audio_path}")
+    if not vad_filter:
+        print("VAD filter disabled - processing all audio segments")
     audio = whisperx.load_audio(audio_path)
     result = model.transcribe(audio, batch_size=batch_size, language=language)
 
@@ -256,6 +274,11 @@ def main():
         "--no-align", action="store_true", help="Skip word-level alignment (faster)"
     )
     parser.add_argument(
+        "--no-vad",
+        action="store_true",
+        help="Disable VAD filtering (use if transcription has gaps/missing segments)",
+    )
+    parser.add_argument(
         "--output",
         "-o",
         default=None,
@@ -284,6 +307,7 @@ def main():
         language=args.language,
         align=not args.no_align,
         device=args.device,
+        vad_filter=not args.no_vad,
     )
 
     # Determine output format
