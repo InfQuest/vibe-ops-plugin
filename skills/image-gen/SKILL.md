@@ -1,11 +1,11 @@
 ---
 name: image-gen
-description: 使用 AI 生成图片，支持多种模型和风格。Use when user wants to 生成图片, 画图, 创建图像, AI绘图, 生成一张图, generate image, create image, draw picture, AI art.
+description: 使用 AI 生成图片，支持多种模型和风格。Use when user wants to 生成图片, 画图, 创建图像, AI绘图, 生成一张图, generate image, create image, draw picture, AI art, 编辑图片, 修改图片, edit image, modify image.
 ---
 
 # Image Generator
 
-使用 OpenRouter API 生成 AI 图片，支持多种模型和自定义选项。
+使用 OpenRouter API 生成 AI 图片，支持多种模型和自定义选项。也支持传入图片进行二次编辑。
 
 ## Prerequisites
 
@@ -40,30 +40,37 @@ which node && node --version || echo "NOT_INSTALLED"
 
 使用 AskUserQuestion 工具收集以下信息：
 
-1. **图片描述（Prompt）**：让用户描述想要生成的图片
+1. **输入图片（可选）**：是否基于现有图片进行编辑
+   - 选项：
+     - "不需要 - 纯文本生成新图片 (Recommended)"
+     - "有图片 - 我想编辑一张现有图片"
+   - 如果用户选择编辑图片，询问图片路径
+
+2. **图片描述（Prompt）**：让用户描述想要生成/编辑的图片
    - 让用户手动输入详细描述
+   - 如果是编辑模式，提示用户描述想要的修改效果
    - 提示用户：描述越详细，生成效果越好
 
-2. **模型选择**：选择使用哪个 AI 模型
+3. **模型选择**：选择使用哪个 AI 模型
    - 选项：
      - "Gemini 2.5 Flash Image - Google 图片生成模型 (Recommended)"
      - "Seedream 4.5 - 字节跳动高质量模型"
 
-3. **图片尺寸**：选择输出尺寸
+4. **图片比例**：选择输出比例
    - 选项：
-     - "1024x1024 - 正方形 (Recommended)"
-     - "1024x768 - 横向 4:3"
-     - "768x1024 - 纵向 3:4"
-     - "1280x720 - 横向 16:9"
-     - "720x1280 - 纵向 9:16"
+     - "1:1 - 正方形 (Recommended)"
+     - "4:3 - 横向"
+     - "3:4 - 纵向"
+     - "16:9 - 横向宽屏"
+     - "9:16 - 纵向竖屏"
 
-4. **生成数量**：生成几张图片？
+5. **生成数量**：生成几张图片？
    - 选项：
      - "1 张 (Recommended)"
      - "2 张"
      - "4 张"
 
-5. **保存位置**：图片保存到哪里？
+6. **保存位置**：图片保存到哪里？
    - 建议默认：当前目录，文件名为 `generated_image_时间戳.png`
    - 让用户可以自定义路径
 
@@ -72,19 +79,25 @@ which node && node --version || echo "NOT_INSTALLED"
 使用 skill 目录下的 `image-gen.js` 脚本：
 
 ```bash
-node /path/to/skills/image-gen/image-gen.js "MODEL" "PROMPT" WIDTH HEIGHT NUM_IMAGES "OUTPUT_DIR"
+node /path/to/skills/image-gen/image-gen.js "MODEL" "PROMPT" "ASPECT_RATIO" NUM_IMAGES "OUTPUT_DIR" "INPUT_IMAGE"
 ```
 
 参数说明：
 - MODEL: gemini-pro / seedream
 - PROMPT: 用户的图片描述
-- WIDTH/HEIGHT: 图片尺寸
+- ASPECT_RATIO: 图片比例（1:1, 4:3, 3:4, 16:9, 9:16）
 - NUM_IMAGES: 生成数量
 - OUTPUT_DIR: 保存目录
+- INPUT_IMAGE: （可选）输入图片路径，用于图片编辑模式
 
-示例：
+示例（纯文本生成）：
 ```bash
-node skills/image-gen/image-gen.js "gemini-pro" "一只在星空下的猫" 1024 1024 1 "."
+node skills/image-gen/image-gen.js "gemini-pro" "一只在星空下的猫" "1:1" 1 "."
+```
+
+示例（图片编辑）：
+```bash
+node skills/image-gen/image-gen.js "gemini-pro" "把背景换成海边" "1:1" 1 "." "/path/to/input.jpg"
 ```
 
 ### Step 5: 展示结果

@@ -8,10 +8,10 @@ const path = require('path');
 const API_KEY = process.env.OPENROUTER_API_KEY;
 const MODEL = process.argv[2] || 'gemini-pro';
 const PROMPT = process.argv[3] || 'A beautiful sunset over mountains';
-const WIDTH = parseInt(process.argv[4]) || 1024;
-const HEIGHT = parseInt(process.argv[5]) || 1024;
-const NUM_IMAGES = parseInt(process.argv[6]) || 1;
-const OUTPUT_DIR = process.argv[7] || '.';
+const ASPECT_RATIO = process.argv[4] || '1:1';
+const NUM_IMAGES = parseInt(process.argv[5]) || 1;
+const OUTPUT_DIR = process.argv[6] || '.';
+const INPUT_IMAGE = process.argv[7] || '';  // 可选：输入图片路径，用于图片编辑
 
 // 模型映射
 const MODEL_MAP = {
@@ -30,8 +30,43 @@ if (!API_KEY) {
 console.log(`🎨 开始生成图片...`);
 console.log(`📝 提示词: ${PROMPT}`);
 console.log(`🤖 模型: ${modelId}`);
-console.log(`📐 尺寸: ${WIDTH}x${HEIGHT}`);
+console.log(`📐 比例: ${ASPECT_RATIO}`);
 console.log(`🔢 数量: ${NUM_IMAGES}`);
+if (INPUT_IMAGE) {
+  console.log(`🖼️  输入图片: ${INPUT_IMAGE}`);
+}
+
+// 构建消息内容
+let messageContent;
+
+if (INPUT_IMAGE) {
+  // 图片编辑模式：读取输入图片并转为 base64
+  if (!fs.existsSync(INPUT_IMAGE)) {
+    console.error(`❌ 输入图片不存在: ${INPUT_IMAGE}`);
+    process.exit(1);
+  }
+
+  const imageBuffer = fs.readFileSync(INPUT_IMAGE);
+  const base64Image = imageBuffer.toString('base64');
+  const ext = path.extname(INPUT_IMAGE).toLowerCase().slice(1);
+  const mimeType = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`;
+
+  messageContent = [
+    {
+      type: 'text',
+      text: `Edit this image: ${PROMPT}`
+    },
+    {
+      type: 'image_url',
+      image_url: {
+        url: `data:${mimeType};base64,${base64Image}`
+      }
+    }
+  ];
+} else {
+  // 纯文本生成模式
+  messageContent = `Generate an image: ${PROMPT}`;
+}
 
 // 使用 chat completions API 生成图片
 const requestData = JSON.stringify({
@@ -39,10 +74,13 @@ const requestData = JSON.stringify({
   messages: [
     {
       role: 'user',
-      content: `Generate an image: ${PROMPT}`
+      content: messageContent
     }
   ],
   modalities: ['image', 'text'],
+  image_config: {
+    aspect_ratio: ASPECT_RATIO
+  },
   max_tokens: 4096
 });
 
