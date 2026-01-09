@@ -32,11 +32,19 @@ if (!fs.existsSync(IMAGE_PATH)) {
   process.exit(1);
 }
 
+// 检查文件大小（限制 20MB）
+const MAX_FILE_SIZE = 20 * 1024 * 1024;
+const stats = fs.statSync(IMAGE_PATH);
+if (stats.size > MAX_FILE_SIZE) {
+  console.error(`❌ 图片文件超过 20MB 限制 (当前: ${(stats.size / 1024 / 1024).toFixed(2)}MB)`);
+  process.exit(1);
+}
+
 // 读取图片并转为 base64
 const imageBuffer = fs.readFileSync(IMAGE_PATH);
 const base64Image = imageBuffer.toString('base64');
 const ext = path.extname(IMAGE_PATH).toLowerCase().slice(1);
-const mimeType = ext === 'jpg' ? 'image/jpeg' : `image/${ext}`;
+const mimeType = (ext === 'jpg' || ext === 'jpeg') ? 'image/jpeg' : `image/${ext}`;
 
 // 构建系统提示
 const systemPrompt = LANGUAGE === 'chinese'
