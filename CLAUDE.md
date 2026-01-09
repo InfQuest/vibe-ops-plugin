@@ -1,6 +1,6 @@
 # Vibe Ops Plugin
 
-> Version: 0.8.0
+> Version: 0.9.0
 
 面向非技术用户的 Claude Code 插件，提供常用操作的自动化技能。
 
@@ -29,6 +29,8 @@ vibe-ops-plugin/
 │   │   └── image-understand.js
 │   ├── install-app/      # macOS 软件安装
 │   │   └── SKILL.md
+│   ├── skill-extractor/  # 经验提取生成 Skill
+│   │   └── SKILL.md
 │   ├── video-concat/     # 视频合并
 │   │   └── SKILL.md
 │   ├── video-trim/       # 视频裁剪
@@ -49,6 +51,7 @@ vibe-ops-plugin/
 | image-gen | AI 图片生成（OpenRouter API） | 生成图片、画图、generate image |
 | image-understand | AI 图片理解（Gemini 3 Pro） | 理解图片、分析图片、describe image |
 | install-app | macOS 软件安装（自动处理 Homebrew） | 安装、install、帮我装 |
+| skill-extractor | 从会话提取经验生成 Skill | 提取skill、固化经验、extract skill |
 | video-concat | 合并多个视频文件 | 合并视频、拼接视频、merge videos |
 | video-trim | 裁剪视频片段 | 剪辑视频、裁剪视频、trim video |
 | youtube-download | YouTube/B站视频下载（yt-dlp） | 下载视频、download youtube、下载B站 |
