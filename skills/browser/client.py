@@ -49,14 +49,14 @@ SERVER_URL = "http://localhost:9222"
 HTTP_TIMEOUT = 10  # seconds
 
 
-def _load_snapshot_script() -> str:
-    """Load the ARIA snapshot script from file."""
+def _load_refs_script() -> str:
+    """Load the refs generation script from file."""
     script_path = Path(__file__).parent / "snapshot.js"
     return script_path.read_text(encoding="utf-8")
 
 
-# ARIA Snapshot script - loaded from snapshot.js
-SNAPSHOT_SCRIPT = _load_snapshot_script()
+# Refs generation script - loaded from snapshot.js
+REFS_SCRIPT = _load_refs_script()
 
 
 @dataclass
@@ -282,19 +282,85 @@ class BrowserClient:
 
     # === New Features ===
 
-    def get_ai_snapshot(self, name: str) -> str:
+    def get_ai_snapshot(self, name: str, interactive: bool = False) -> str:
         """Get AI-friendly ARIA snapshot for a page.
+        Uses Playwright's built-in aria_snapshot() API with injected refs.
         Returns YAML format with refs like [ref=e1], [ref=e2].
+
+        Args:
+            name: Page name
+            interactive: If True, only include interactive elements (buttons, links, inputs, etc.)
         """
         page = self.get_playwright_page(name)
 
-        # Inject snapshot script and call getAISnapshot
-        snapshot = page.evaluate(f"""() => {{
-            {SNAPSHOT_SCRIPT}
-            return window.__devBrowser_getAISnapshot();
+        # 1. Get ARIA snapshot using Playwright's built-in API
+        aria_snapshot = page.locator(":root").aria_snapshot()
+
+        # 2. Inject refs script and generate refs for interactive elements
+        # Note: refs (DOM elements) are stored in window.__devBrowserRefs in JS context
+        # We only get back the serializable refsList for merging into snapshot
+        options_json = "true" if interactive else "false"
+        refs_list = page.evaluate(f"""() => {{
+            {REFS_SCRIPT}
+            const result = window.__devBrowser_generateRefs({{ interactive: {options_json} }});
+            // Store refs in window for later use by select_snapshot_ref
+            window.__devBrowserRefs = result.refs;
+            // Return only the serializable part
+            return result.refsList;
         }}""")
 
-        return snapshot
+        if not refs_list:
+            return aria_snapshot
+
+        # Build a mapping of role+name to list of (ref_id, nth)
+        # Format: {(role, name): [(ref_id, nth), ...]}
+        ref_lookup = {}
+        for ref_info in refs_list:
+            key = (ref_info["role"], ref_info["name"])
+            if key not in ref_lookup:
+                ref_lookup[key] = []
+            ref_lookup[key].append((ref_info["ref"], ref_info.get("nth")))
+
+        # Inject refs into ARIA snapshot YAML
+        snapshot_with_refs = self._inject_refs_into_snapshot(aria_snapshot, ref_lookup)
+        return snapshot_with_refs
+
+    def _inject_refs_into_snapshot(self, snapshot: str, ref_lookup: dict) -> str:
+        """Inject refs into ARIA snapshot YAML output."""
+        import re
+
+        lines = snapshot.split("\n")
+        result = []
+
+        # Track current index for each role+name
+        current_index = {}
+
+        for line in lines:
+            # Match YAML entries like "- button "Submit"" or "- link "Home":"
+            match = re.match(r'^(\s*-\s+)(\w+)\s+"([^"]*)"(.*)$', line)
+            if match:
+                indent, role, name, rest = match.groups()
+                key = (role, name)
+                if key in ref_lookup:
+                    refs = ref_lookup[key]
+                    idx = current_index.get(key, 0)
+                    if idx < len(refs):
+                        ref_id, nth = refs[idx]
+                        current_index[key] = idx + 1
+
+                        # Build ref string with optional nth
+                        ref_str = f"[ref={ref_id}]"
+                        if nth is not None and nth > 0:
+                            ref_str += f" [nth={nth}]"
+
+                        # Insert ref before any trailing colon
+                        if rest.endswith(":"):
+                            line = f'{indent}{role} "{name}" {ref_str}:'
+                        else:
+                            line = f'{indent}{role} "{name}" {ref_str}{rest}'
+            result.append(line)
+
+        return "\n".join(result)
 
     def select_snapshot_ref(self, name: str, ref: str) -> ElementHandle:
         """Get an element handle by its ref from the last getAISnapshot call."""
@@ -488,7 +554,7 @@ def cmd_screenshot(client: BrowserClient, args):
     try:
         page = client.get_playwright_page(args.name)
         output_path = args.output or f"{args.name}.png"
-        page.screenshot(path=output_path)
+        page.screenshot(path=output_path, full_page=args.full_page)
         print(f"Screenshot saved to: {output_path}")
         return 0
     except RuntimeError as e:
@@ -613,7 +679,7 @@ def cmd_snapshot(client: BrowserClient, args):
         return 1
 
     try:
-        snapshot = client.get_ai_snapshot(args.name)
+        snapshot = client.get_ai_snapshot(args.name, interactive=args.interactive)
         print(snapshot)
         return 0
     except RuntimeError as e:
@@ -787,6 +853,9 @@ def main():
     p_screenshot = subparsers.add_parser("screenshot", help="Take a screenshot")
     p_screenshot.add_argument("name", help="Page name")
     p_screenshot.add_argument("output", nargs="?", help="Output file path")
+    p_screenshot.add_argument(
+        "--full-page", action="store_true", help="Capture full scrollable page"
+    )
 
     # click
     p_click = subparsers.add_parser("click", help="Click an element")
@@ -822,6 +891,10 @@ def main():
     # snapshot
     p_snapshot = subparsers.add_parser("snapshot", help="Get AI snapshot (ARIA tree)")
     p_snapshot.add_argument("name", help="Page name")
+    p_snapshot.add_argument(
+        "-i", "--interactive", action="store_true",
+        help="Only show interactive elements (buttons, links, inputs, etc.)"
+    )
 
     # select-ref
     p_select_ref = subparsers.add_parser(
