@@ -30,9 +30,25 @@ const MIME_TYPES = {
 };
 
 function getMediaType(filePath) {
-  // Check if it's a YouTube URL
-  if (filePath.includes('youtube.com/') || filePath.includes('youtu.be/')) {
-    return 'youtube';
+  // Check if it's a YouTube URL by parsing and validating the hostname
+  try {
+    // Only attempt URL parsing if the input looks like a URL
+    if (typeof filePath === 'string' &&
+        (filePath.startsWith('http://') || filePath.startsWith('https://'))) {
+      const url = new URL(filePath);
+      const host = url.hostname.toLowerCase();
+      const allowedYouTubeHosts = new Set([
+        'youtube.com',
+        'www.youtube.com',
+        'm.youtube.com',
+        'youtu.be'
+      ]);
+      if (allowedYouTubeHosts.has(host)) {
+        return 'youtube';
+      }
+    }
+  } catch (e) {
+    // If parsing fails, fall through and treat as a file path
   }
 
   const ext = path.extname(filePath).toLowerCase().slice(1);
