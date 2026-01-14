@@ -100,13 +100,29 @@ class BrowserClient:
         self._browser_ws_endpoint: Optional[str] = None
         self._page_cache: dict[str, Page] = {}
 
-    def _check_server(self) -> bool:
-        """Check if browser server is running."""
-        try:
-            resp = requests.get(SERVER_URL, timeout=2)
-            return resp.ok
-        except requests.RequestException:
-            return False
+    def _check_server(self, wait: bool = True, max_retries: int = 30, interval: float = 0.5) -> bool:
+        """Check if browser server is running.
+
+        Args:
+            wait: If True, wait for server to become available (with retries)
+            max_retries: Maximum number of retry attempts (default: 30, total ~15s)
+            interval: Time between retries in seconds (default: 0.5s)
+
+        Returns:
+            True if server is running, False otherwise
+        """
+        for attempt in range(max_retries if wait else 1):
+            try:
+                resp = requests.get(SERVER_URL, timeout=2)
+                if resp.ok:
+                    return True
+            except requests.RequestException:
+                pass
+
+            if wait and attempt < max_retries - 1:
+                time.sleep(interval)
+
+        return False
 
     def _ensure_browser_connected(self) -> Browser:
         """Ensure we have a browser connection, connecting if necessary."""
