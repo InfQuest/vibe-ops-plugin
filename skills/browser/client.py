@@ -4,6 +4,7 @@
 # dependencies = [
 #     "playwright>=1.49.0",
 #     "requests>=2.31.0",
+#     "pillow>=10.0.0",
 # ]
 # ///
 
@@ -545,6 +546,21 @@ def cmd_goto(client: BrowserClient, args):
         client.disconnect()
 
 
+def _resize_if_needed(image_path: str, max_size: int = 1568):
+    """缩放图片，保持宽高比，确保最长边不超过 max_size"""
+    from PIL import Image
+
+    with Image.open(image_path) as img:
+        w, h = img.size
+        if w <= max_size and h <= max_size:
+            return  # 无需缩放
+
+        ratio = max_size / max(w, h)
+        new_size = (int(w * ratio), int(h * ratio))
+        img = img.resize(new_size, Image.LANCZOS)
+        img.save(image_path)
+
+
 def cmd_screenshot(client: BrowserClient, args):
     """Take a screenshot of a page."""
     if not client._check_server():
@@ -555,6 +571,7 @@ def cmd_screenshot(client: BrowserClient, args):
         page = client.get_playwright_page(args.name)
         output_path = args.output or f"{args.name}.png"
         page.screenshot(path=output_path, full_page=args.full_page)
+        _resize_if_needed(output_path)
         print(f"Screenshot saved to: {output_path}")
         return 0
     except RuntimeError as e:
