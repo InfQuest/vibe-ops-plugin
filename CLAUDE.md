@@ -1,6 +1,6 @@
 # Vibe Ops Plugin
 
-> Version: 0.10.2
+> Version: 0.10.3
 
 面向非技术用户的 Claude Code 插件，提供常用操作的自动化技能。
 
