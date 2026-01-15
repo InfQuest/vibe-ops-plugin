@@ -26,7 +26,7 @@ vibe-ops-plugin/
 │   │   └── SKILL.md
 │   ├── video-gen/        # AI 视频生成
 │   │   ├── SKILL.md
-│   │   └── video-gen.js
+│   │   └── video-gen.py
 │   ├── media-understand/ # AI 多媒体理解
 │   │   ├── SKILL.md
 │   │   └── media-understand.js

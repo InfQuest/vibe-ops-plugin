@@ -78,10 +78,10 @@ which node && node --version || echo "NOT_INSTALLED"
 
 ### Step 4: 执行脚本
 
-使用 skill 目录下的 `video-gen.js` 脚本：
+使用 skill 目录下的 `video-gen.py` 脚本（需要 uv）：
 
 ```bash
-node /path/to/skills/video-gen/video-gen.js "MODEL" "PROMPT" "SIZE" "SECONDS" "OUTPUT_DIR" "INPUT_IMAGE"
+uv run /path/to/skills/video-gen/video-gen.py "MODEL" "PROMPT" "SIZE" "SECONDS" "OUTPUT_DIR" "INPUT_IMAGE"
 ```
 
 参数说明：
@@ -98,12 +98,12 @@ node /path/to/skills/video-gen/video-gen.js "MODEL" "PROMPT" "SIZE" "SECONDS" "O
 
 示例（纯文本生成）：
 ```bash
-node skills/video-gen/video-gen.js "veo-3.1" "一只金毛犬在海边奔跑，阳光明媚" "720P" "8" "."
+uv run skills/video-gen/video-gen.py "veo-3.1" "一只金毛犬在海边奔跑，阳光明媚" "720P" "8" "."
 ```
 
 示例（图片引导）：
 ```bash
-node skills/video-gen/video-gen.js "sora-2-pro" "让图片中的人物微笑并挥手" "1280x720" "4" "." "/path/to/image.jpg"
+uv run skills/video-gen/video-gen.py "sora-2-pro" "让图片中的人物微笑并挥手" "1280x720" "4" "." "/path/to/image.jpg"
 ```
 
 ### Step 5: 等待生成
