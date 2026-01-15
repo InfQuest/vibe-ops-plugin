@@ -68,7 +68,6 @@ which node && node --version || echo "NOT_INSTALLED"
    - 选项：
      - "16:9 横屏 (Recommended)"
      - "9:16 竖屏（适合手机/短视频）"
-     - "1:1 方形"
 
 5. **视频时长**：根据模型选择
    - **Veo**：4s / 6s / 8s（默认）

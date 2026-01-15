@@ -238,8 +238,6 @@ async function main() {
     const filename = `generated_video_${timestamp}.mp4`;
     const filepath = path.join(OUTPUT_DIR, filename);
 
-    const downloadUrl = `https://${BASE_URL}/v1/videos/${videoId}/content`;
-
     // 直接下载二进制内容
     await new Promise((resolve, reject) => {
       const file = fs.createWriteStream(filepath);
@@ -257,7 +255,6 @@ async function main() {
       const req = https.request(downloadOptions, (res) => {
         if (res.statusCode === 302 || res.statusCode === 301) {
           // 处理重定向
-          const redirectUrl = new URL(res.headers.location);
           https.get(res.headers.location, (redirectRes) => {
             redirectRes.pipe(file);
             file.on('finish', () => {
