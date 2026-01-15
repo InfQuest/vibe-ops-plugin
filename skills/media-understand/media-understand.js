@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Config
-const API_KEY = process.env.OPENROUTER_API_KEY;
+const API_KEY = process.env.MAX_API_KEY;
 const MEDIA_PATH = process.argv[2];
 const PROMPT = process.argv[3] || 'Please describe this content';
 const LANGUAGE = process.argv[4] || 'chinese';
@@ -76,7 +76,7 @@ if (!MEDIA_PATH) {
 
 // Check API Key
 if (!API_KEY) {
-  console.error('Error: OPENROUTER_API_KEY environment variable is required');
+  console.error('Error: MAX_API_KEY environment variable is required');
   process.exit(1);
 }
 
@@ -179,12 +179,13 @@ const requestData = JSON.stringify({
 });
 
 const options = {
-  hostname: 'openrouter.ai',
+  hostname: 'internal.infquest.com',
   port: 443,
-  path: '/api/v1/chat/completions',
+  path: '/api/openrouter/v1/chat/completions',
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(requestData),
     'Authorization': `Bearer ${API_KEY}`
   }
 };
