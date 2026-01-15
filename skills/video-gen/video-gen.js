@@ -3,6 +3,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // 配置
 const API_KEY = process.env.AIHUBMIX_API_KEY;
@@ -74,6 +75,84 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// 解析目标尺寸（如 "1280x720" -> { width: 1280, height: 720 }）
+function parseSize(size) {
+  const match = size.match(/(\d+)x(\d+)/i);
+  if (match) {
+    return { width: parseInt(match[1]), height: parseInt(match[2]) };
+  }
+  return null;
+}
+
+// 获取图片尺寸（使用 sips，macOS 专用）
+function getImageSize(imagePath) {
+  try {
+    const output = execSync(`sips -g pixelWidth -g pixelHeight "${imagePath}"`, { encoding: 'utf8' });
+    const widthMatch = output.match(/pixelWidth:\s*(\d+)/);
+    const heightMatch = output.match(/pixelHeight:\s*(\d+)/);
+    if (widthMatch && heightMatch) {
+      return { width: parseInt(widthMatch[1]), height: parseInt(heightMatch[1]) };
+    }
+  } catch (e) {
+    console.warn(`[Warning] Failed to get image size: ${e.message}`);
+  }
+  return null;
+}
+
+// 缩放图片到指定尺寸（使用 sips，macOS 专用）
+function resizeImage(imagePath, targetWidth, targetHeight) {
+  const ext = path.extname(imagePath);
+  const tempPath = path.join(path.dirname(imagePath), `resized_${Date.now()}${ext}`);
+
+  try {
+    // 复制原图到临时文件
+    fs.copyFileSync(imagePath, tempPath);
+    // 缩放临时文件
+    execSync(`sips -z ${targetHeight} ${targetWidth} "${tempPath}"`, { encoding: 'utf8' });
+    console.log(`[Resize] Image resized to ${targetWidth}x${targetHeight}: ${tempPath}`);
+    return tempPath;
+  } catch (e) {
+    console.error(`[Error] Failed to resize image: ${e.message}`);
+    if (fs.existsSync(tempPath)) {
+      fs.unlinkSync(tempPath);
+    }
+    return null;
+  }
+}
+
+// 检查并调整图片尺寸
+function prepareImage(imagePath, targetSize) {
+  const target = parseSize(targetSize);
+  if (!target) {
+    console.log(`[Info] Size format not recognized (${targetSize}), skipping resize check`);
+    return { path: imagePath, tempFile: null };
+  }
+
+  const current = getImageSize(imagePath);
+  if (!current) {
+    console.log(`[Info] Could not get image size, using original`);
+    return { path: imagePath, tempFile: null };
+  }
+
+  console.log(`[Check] Image size: ${current.width}x${current.height}, target: ${target.width}x${target.height}`);
+
+  if (current.width === target.width && current.height === target.height) {
+    console.log(`[Check] Image size matches, no resize needed`);
+    return { path: imagePath, tempFile: null };
+  }
+
+  // 需要缩放
+  console.log(`[Resize] Resizing image to match target size...`);
+  const resizedPath = resizeImage(imagePath, target.width, target.height);
+  if (resizedPath) {
+    return { path: resizedPath, tempFile: resizedPath };
+  }
+
+  // 缩放失败，使用原图
+  console.warn(`[Warning] Resize failed, using original image`);
+  return { path: imagePath, tempFile: null };
+}
+
 // 构建 multipart/form-data 请求体
 function buildMultipartBody(fields, file) {
   const boundary = '----FormBoundary' + Math.random().toString(36).substring(2);
@@ -125,6 +204,8 @@ async function main() {
     let requestBody;
     let contentType = 'application/json';
 
+    let tempImageFile = null;  // 用于跟踪临时文件，最后清理
+
     // 检查是否需要上传图片
     if (INPUT_IMAGE && IMAGE_SUPPORTED_MODELS.includes(modelId)) {
       if (!fs.existsSync(INPUT_IMAGE)) {
@@ -132,10 +213,14 @@ async function main() {
         process.exit(1);
       }
 
+      // 检查并调整图片尺寸
+      const prepared = prepareImage(INPUT_IMAGE, SIZE);
+      tempImageFile = prepared.tempFile;
+
       // 所有图片上传都使用 multipart/form-data
       const multipart = buildMultipartBody(
         { model: modelId, prompt: PROMPT, size: SIZE, seconds: SECONDS },
-        { fieldName: 'input_reference', path: INPUT_IMAGE }
+        { fieldName: 'input_reference', path: prepared.path }
       );
       requestBody = multipart.body;
       contentType = multipart.contentType;
@@ -288,6 +373,12 @@ async function main() {
     console.log(`File size: ${fileSizeMB} MB`);
     console.log(`Total time: ${totalTime}s`);
     console.log('='.repeat(50));
+
+    // 清理临时文件
+    if (tempImageFile && fs.existsSync(tempImageFile)) {
+      fs.unlinkSync(tempImageFile);
+      console.log(`[Cleanup] Removed temp file: ${tempImageFile}`);
+    }
 
   } catch (error) {
     console.error(`Error: ${error.message}`);
