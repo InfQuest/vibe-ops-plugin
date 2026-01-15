@@ -68,16 +68,30 @@ def resize_image(image_path: str, target_size: tuple[int, int]) -> str | None:
         return None
 
 
+def get_mime_type(file_path: str) -> str:
+    """根据文件扩展名获取 MIME 类型"""
+    ext = Path(file_path).suffix.lower()
+    mime_map = {
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".png": "image/png",
+        ".webp": "image/webp",
+    }
+    return mime_map.get(ext, "image/jpeg")
+
+
 def create_video_task(api_key: str, model: str, prompt: str, size: str, seconds: str, image_path: str | None = None) -> str:
     """创建视频生成任务，返回 video_id"""
     headers = {"Authorization": f"Bearer {api_key}"}
 
     if image_path and model in IMAGE_SUPPORTED_MODELS:
-        # 使用 multipart/form-data 上传图片
-        files = {"input_reference": open(image_path, "rb")}
-        data = {"model": model, "prompt": prompt, "size": size, "seconds": seconds}
-        response = requests.post(f"{BASE_URL}/videos", headers=headers, data=data, files=files)
-        files["input_reference"].close()
+        # 使用 multipart/form-data 上传图片，需指定 MIME 类型
+        mime_type = get_mime_type(image_path)
+        filename = Path(image_path).name
+        with open(image_path, "rb") as f:
+            files = {"input_reference": (filename, f, mime_type)}
+            data = {"model": model, "prompt": prompt, "size": size, "seconds": seconds}
+            response = requests.post(f"{BASE_URL}/videos", headers=headers, data=data, files=files)
     else:
         # 纯 JSON 请求
         headers["Content-Type"] = "application/json"
@@ -203,7 +217,9 @@ def main():
         print("[Step 3] Downloading video...")
         timestamp = int(time.time() * 1000)
         filename = f"generated_video_{timestamp}.mp4"
-        filepath = Path(args.output_dir) / filename
+        output_dir = Path(args.output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)  # 确保目录存在
+        filepath = output_dir / filename
         download_video(api_key, video_id, str(filepath))
 
         file_size_mb = filepath.stat().st_size / (1024 * 1024)
