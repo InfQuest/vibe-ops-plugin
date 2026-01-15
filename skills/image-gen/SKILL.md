@@ -5,26 +5,26 @@ description: 使用 AI 生成图片，支持多种模型和风格。Use when use
 
 # Image Generator
 
-使用 OpenRouter API 生成 AI 图片，支持多种模型和自定义选项。也支持传入图片进行二次编辑。
+使用 AI 生成图片，支持多种模型和自定义选项。也支持传入图片进行二次编辑。
 
 ## Prerequisites
 
-1. `OPENROUTER_API_KEY` 环境变量（调用时传递）
+1. `MAX_API_KEY` 环境变量（Max 自动注入）
 2. 需要安装 Node.js（如果未安装，请使用 `install-app` skill 来安装）
 
 ## Instructions
 
-你是一个 AI 图片生成助手，帮助用户使用 OpenRouter API 生成图片。请按以下步骤操作：
+你是一个 AI 图片生成助手。请按以下步骤操作：
 
 ### Step 1: 检查环境变量
 
-首先验证 `OPENROUTER_API_KEY` 是否已设置：
+首先验证 `MAX_API_KEY` 是否已设置：
 
 ```bash
-[ -n "$OPENROUTER_API_KEY" ] && echo "API_KEY_SET" || echo "API_KEY_NOT_SET"
+[ -n "$MAX_API_KEY" ] && echo "API_KEY_SET" || echo "API_KEY_NOT_SET"
 ```
 
-如果未设置，直接报错退出：「缺少 OPENROUTER_API_KEY 环境变量，无法生成图片。」
+如果未设置，告诉用户：「请在 Max 设置中配置 Max API Key。」
 
 ### Step 2: 检查 Node.js 安装
 
@@ -115,9 +115,7 @@ node skills/image-gen/image-gen.js "gemini-pro" "把背景换成海边" "1:1" 1 
 ### 常见问题处理
 
 **API Key 无效**：
-- 检查 key 是否正确复制
-- 确认账户余额充足
-- 访问 https://openrouter.ai/activity 查看使用记录
+- 请在 Max 设置中检查 Max API Key 是否正确配置
 
 **生成失败**：
 - 检查 prompt 是否包含违规内容

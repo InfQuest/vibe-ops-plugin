@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 // 配置
-const API_KEY = process.env.OPENROUTER_API_KEY;
+const API_KEY = process.env.MAX_API_KEY;
 const MODEL = process.argv[2] || 'gemini-pro';
 const PROMPT = process.argv[3] || 'A beautiful sunset over mountains';
 const ASPECT_RATIO = process.argv[4] || '1:1';
@@ -23,7 +23,7 @@ const modelId = MODEL_MAP[MODEL] || MODEL;
 
 // 检查 API Key
 if (!API_KEY) {
-  console.error('❌ 缺少 OPENROUTER_API_KEY 环境变量');
+  console.error('❌ 缺少 MAX_API_KEY 环境变量');
   process.exit(1);
 }
 
@@ -85,9 +85,9 @@ const requestData = JSON.stringify({
 });
 
 const options = {
-  hostname: 'openrouter.ai',
+  hostname: 'internal.infquest.com',
   port: 443,
-  path: '/api/v1/chat/completions',
+  path: '/api/openrouter/v1/chat/completions',
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
