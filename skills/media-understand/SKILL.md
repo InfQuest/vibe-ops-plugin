@@ -5,7 +5,7 @@ description: 使用 AI 理解和分析多媒体内容（图片、视频、音频
 
 # Media Understanding
 
-使用 Gemini 2.5 Flash 通过 OpenRouter API 分析和理解多媒体内容。
+使用 Gemini 2.5 Flash 分析和理解多媒体内容。
 
 ## Supported Formats
 
@@ -17,7 +17,7 @@ description: 使用 AI 理解和分析多媒体内容（图片、视频、音频
 
 ## Prerequisites
 
-1. `OPENROUTER_API_KEY` environment variable
+1. `MAX_API_KEY` 环境变量（Max 自动注入）
 2. Node.js installed
 
 ## Usage
@@ -104,4 +104,4 @@ node skills/media-understand/media-understand.js ./meeting.wav "识别不同的�
 
 **File too large**: Compress or trim the media file
 
-**API error**: Check OPENROUTER_API_KEY is valid and has credits
+**API error**: 请在 Max 设置中检查 Max API Key 是否正确配置
