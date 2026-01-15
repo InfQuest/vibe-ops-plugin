@@ -1,6 +1,6 @@
 # Vibe Ops Plugin
 
-> Version: 0.10.4
+> Version: 0.11.1
 
 面向非技术用户的 Claude Code 插件，提供常用操作的自动化技能。
 
@@ -24,6 +24,9 @@ vibe-ops-plugin/
 │   │   └── client.py
 │   ├── image-gen/        # AI 图片生成
 │   │   └── SKILL.md
+│   ├── video-gen/        # AI 视频生成
+│   │   ├── SKILL.md
+│   │   └── video-gen.js
 │   ├── media-understand/ # AI 多媒体理解
 │   │   ├── SKILL.md
 │   │   └── media-understand.js
@@ -49,6 +52,7 @@ vibe-ops-plugin/
 | audio-transcribe | 语音转文字（Whisper） | 语音转文字、音频转文字、transcribe |
 | browser | 浏览器自动化（Playwright + CDP） | 打开网页、截图、click、fill、automate |
 | image-gen | AI 图片生成（OpenRouter API） | 生成图片、画图、generate image |
+| video-gen | AI 视频生成（Veo/Sora） | 生成视频、文生视频、图生视频、generate video |
 | media-understand | AI 多媒体理解（Gemini 2.5 Flash） | 理解图片、分析视频、transcribe audio |
 | install-app | macOS 软件安装（自动处理 Homebrew） | 安装、install、帮我装 |
 | skill-extractor | 从会话提取经验生成 Skill | 提取skill、固化经验、extract skill |
