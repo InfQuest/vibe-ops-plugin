@@ -1,7 +1,7 @@
 {
   "name": "vibe-ops",
   "description": "A Claude Code plugin for vibe-driven operations and developer workflow automation",
-  "version": "0.10.4",
+  "version": "0.11.1",
   "author": {
     "name": "Infinity Quest"
   },
