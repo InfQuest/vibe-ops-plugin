@@ -5,7 +5,7 @@
 # ///
 
 """
-AI Video Generator - 使用 AIHubMix API 生成视频
+AI Video Generator - 生成 AI 视频
 支持 Veo 3.1 (文生视频) 和 Sora 2 Pro (图生视频)
 """
 
@@ -19,7 +19,7 @@ import requests
 from PIL import Image
 
 # 配置
-BASE_URL = "https://aihubmix.com/v1"
+BASE_URL = "https://internal.infquest.com/api/aihubmix/v1"
 
 # 模型映射
 MODEL_MAP = {
@@ -163,9 +163,9 @@ def main():
     args = parser.parse_args()
 
     # 获取 API Key
-    api_key = os.environ.get("AIHUBMIX_API_KEY")
+    api_key = os.environ.get("MAX_API_KEY")
     if not api_key:
-        print("Error: Missing AIHUBMIX_API_KEY environment variable")
+        print("Error: Missing MAX_API_KEY environment variable")
         sys.exit(1)
 
     # 解析模型

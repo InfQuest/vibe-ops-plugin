@@ -31,6 +31,8 @@ All commands use `client.py` from the skill directory:
 uv run skills/browser/client.py <command> [arguments]
 ```
 
+> ⚠️ **IMPORTANT**: Always use `uv run client.py`, **NOT** `uv run python client.py`. The `uv run` command automatically handles Python and dependencies from `pyproject.toml`. Adding `python` breaks dependency resolution.
+
 ## Workflow Loop
 
 Follow this pattern for complex tasks:

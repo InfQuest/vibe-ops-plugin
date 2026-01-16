@@ -5,12 +5,12 @@ description: 使用 AI 生成视频，支持 Veo/Sora 模型。Use when user wan
 
 # Video Generator
 
-使用 AIHubMix API 生成 AI 视频，支持 Veo 和 Sora 模型。
+使用 AI 生成视频，支持 Veo 和 Sora 模型。
 
 ## Prerequisites
 
-1. `AIHUBMIX_API_KEY` 环境变量
-2. 需要安装 Node.js（如果未安装，请使用 `install-app` skill 来安装）
+1. `MAX_API_KEY` 环境变量（Max 自动注入）
+2. 需要安装 Python 和 uv（如果未安装，请使用 `install-app` skill 来安装）
 
 ## Supported Models
 
@@ -21,25 +21,25 @@ description: 使用 AI 生成视频，支持 Veo/Sora 模型。Use when user wan
 
 ## Instructions
 
-你是一个 AI 视频生成助手，帮助用户使用 AIHubMix API 生成视频。请按以下步骤操作：
+你是一个 AI 视频生成助手。请按以下步骤操作：
 
 ### Step 1: 检查环境变量
 
-首先验证 `AIHUBMIX_API_KEY` 是否已设置：
+首先验证 `MAX_API_KEY` 是否已设置：
 
 ```bash
-[ -n "$AIHUBMIX_API_KEY" ] && echo "API_KEY_SET" || echo "API_KEY_NOT_SET"
+[ -n "$MAX_API_KEY" ] && echo "API_KEY_SET" || echo "API_KEY_NOT_SET"
 ```
 
-如果未设置，直接报错退出：「缺少 AIHUBMIX_API_KEY 环境变量，无法生成视频。请设置后重试。」
+如果未设置，告诉用户：「请在 Max 设置中配置 Max API Key。」
 
-### Step 2: 检查 Node.js 安装
+### Step 2: 检查 Python 和 uv 安装
 
 ```bash
-which node && node --version || echo "NOT_INSTALLED"
+which uv && uv --version || echo "NOT_INSTALLED"
 ```
 
-如果未安装，使用 `install-app` skill 来安装 Node.js。
+如果未安装，使用 `install-app` skill 来安装 uv。
 
 ### Step 3: 收集用户需求
 
@@ -127,9 +127,7 @@ uv run skills/video-gen/video-gen.py "sora-2-pro" "让图片中的人物微笑�
 ### 常见问题处理
 
 **API Key 无效**：
-- 检查 key 是否正确
-- 确认账户余额充足
-- 访问 https://aihubmix.com 查看账户状态
+- 请在 Max 设置中检查 Max API Key 是否正确配置
 
 **生成超时**：
 - 视频生成最长等待 20 分钟
