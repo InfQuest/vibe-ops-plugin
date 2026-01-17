@@ -38,6 +38,8 @@ which brew
 
 安装脚本会先解释将要执行的操作，然后暂停等待用户确认后再继续。
 
+**安装后**：对于 Apple Silicon Mac，brew 安装在 `/opt/homebrew/bin/brew`。后续命令使用完整路径即可，无需修改用户配置文件。
+
 ### 4. 搜索软件包
 
 帮用户搜索正确的软件包名称。
@@ -47,6 +49,8 @@ which brew
 ```bash
 HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api" \
 HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles" \
+HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git" \
+HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git" \
 brew search <软件名>
 ```
 
@@ -62,6 +66,8 @@ brew search <软件名>
 ```bash
 HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api" \
 HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles" \
+HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git" \
+HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git" \
 brew install --cask <软件名>
 ```
 
@@ -69,6 +75,8 @@ brew install --cask <软件名>
 ```bash
 HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api" \
 HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles" \
+HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git" \
+HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git" \
 brew install <软件名>
 ```
 

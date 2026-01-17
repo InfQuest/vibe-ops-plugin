@@ -15,7 +15,7 @@ When the user wants to merge/concatenate videos: $ARGUMENTS
 
 You are a video merging assistant using ffmpeg. Follow these steps:
 
-### Step 1: Get Input Files
+### Step 1: Get and Analyze Input Files
 
 If user hasn't provided input file paths, ask them to provide the list of video files to merge.
 
@@ -33,13 +33,15 @@ Display to user for each file:
 
 Also check if all files have compatible formats (same codec, resolution, frame rate).
 
-### Step 1.5: Check Resolution Compatibility
+### Step 2: Check Compatibility
+
+#### 2a. Resolution Compatibility
 
 **MANDATORY: You MUST check the resolution of all input files before proceeding.**
 
 Compare the resolution (width x height) of all input files:
 
-1. If all files have the **same resolution**: Proceed to Step 3. Note that concat demuxer can be used.
+1. If all files have the **same resolution**: Note that concat demuxer can be used.
 
 2. If files have **different resolutions**: You MUST use the AskUserQuestion tool to ask the user which resolution to use for the output. Present options like:
    - "Use resolution from file1.mp4 (1920x1080)"
@@ -60,13 +62,13 @@ Compare the resolution (width x height) of all input files:
 
    This scales videos while maintaining aspect ratio and adds black padding if needed.
 
-### Step 1.6: Check Audio Codec Compatibility
+#### 2b. Audio Codec Compatibility
 
 **MANDATORY: You MUST check the audio codec of all input files before proceeding.**
 
 Compare the audio codec (e.g., aac, eac3, ac3, mp3, opus) of all input files:
 
-1. If all files have the **same audio codec**: Proceed to Step 3. Note the codec for later use.
+1. If all files have the **same audio codec**: Note the codec for later use.
 
 2. If files have **different audio codecs**: You MUST use the AskUserQuestion tool to ask the user which audio codec to use for the output. Present options dynamically based on detected codecs:
    - "Use [codec1] from file1.mp4"
@@ -90,7 +92,7 @@ Compare the audio codec (e.g., aac, eac3, ac3, mp3, opus) of all input files:
    - AC3: `-c:a ac3 -b:a 384k` (5.1 surround)
    - Copy: `-c:a copy` (only if all codecs match)
 
-### Step 1.7: Confirm File Concatenation Order (CRITICAL)
+#### 2c. Confirm File Concatenation Order (CRITICAL)
 
 **MANDATORY: You MUST ask the user to confirm or specify the concatenation order before proceeding.**
 
@@ -115,7 +117,7 @@ After analyzing all input files, use the AskUserQuestion tool to confirm the ord
 
 **Important**: Never assume the order based on file names or the order provided by the user. Always explicitly confirm before proceeding.
 
-### Step 2: Ask User for Merge Configuration
+### Step 3: Ask User for Merge Configuration
 
 **MANDATORY: You MUST use the AskUserQuestion tool to ask the user about their preferences before executing any ffmpeg command. Do NOT skip this step or make assumptions.**
 
@@ -152,7 +154,7 @@ Use the AskUserQuestion tool to gather user preferences:
 
 6. **Output Path**: Where to save? (suggest default: merged_output.ext)
 
-### Step 3: Build FFmpeg Command
+### Step 4: Build FFmpeg Command
 
 Based on user choices, construct the ffmpeg command:
 
@@ -218,14 +220,14 @@ Available xfade transitions: fade, fadeblack, fadewhite, distance, wipeleft, wip
 -c:a aac -b:a 128k
 ```
 
-### Step 4: Execute and Report
+### Step 5: Execute and Report
 
 1. Show the user the complete ffmpeg command before running
 2. Execute the command with progress output
 3. Report success/failure
 4. Show output file path and size
 
-### Step 5: Verify Output
+### Step 6: Verify Output
 
 After merging, verify the output:
 
