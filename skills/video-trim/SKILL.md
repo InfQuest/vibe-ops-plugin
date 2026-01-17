@@ -7,10 +7,6 @@ description: 裁剪视频片段，支持压缩、音频控制等选项。Use whe
 
 裁剪视频片段，支持压缩、音频处理和输出格式选择。
 
-## Prerequisites
-
-需要安装 ffmpeg。如果未安装，请使用 `install-app` skill 来安装。
-
 ## Usage
 
 When the user wants to trim a video: $ARGUMENTS
@@ -19,17 +15,7 @@ When the user wants to trim a video: $ARGUMENTS
 
 你是一个视频裁剪助手，使用 ffmpeg 帮助用户裁剪视频。请按以下步骤操作：
 
-### Step 1: 检查 ffmpeg 安装
-
-首先验证 ffmpeg 是否已安装：
-
-```bash
-which ffmpeg && ffmpeg -version | head -1 || echo "NOT_INSTALLED"
-```
-
-如果未安装，使用 `install-app` skill 来安装 ffmpeg。告诉用户：「需要先安装 ffmpeg，我来帮你安装。」然后调用 install-app skill 安装 ffmpeg。
-
-### Step 2: 获取输入文件
+### Step 1: 获取输入文件
 
 如果用户没有提供输入文件路径，询问他们提供一个。
 
@@ -45,7 +31,7 @@ ffprobe -v error -show_entries format=duration,size,bit_rate -show_entries strea
 - 编码信息
 - 文件大小
 
-### Step 3: 询问用户裁剪配置
+### Step 2: 询问用户裁剪配置
 
 **⚠️ 必须：你必须使用 AskUserQuestion 工具询问用户的偏好，然后再执行任何 ffmpeg 命令。不要跳过这一步或根据用户的初始请求做出假设。即使用户提供了一些参数（如开始/结束时间），你仍然必须询问压缩、音频处理等选项。**
 
@@ -87,7 +73,7 @@ ffprobe -v error -show_entries format=duration,size,bit_rate -show_entries strea
 
 7. **输出路径**：保存到哪里？（建议默认：input_trimmed.ext）
 
-### Step 4: 构建 FFmpeg 命令
+### Step 3: 构建 FFmpeg 命令
 
 根据用户选择，构建 ffmpeg 命令：
 
@@ -144,7 +130,7 @@ CRF 值说明：
 ffmpeg -ss MIDPOINT -i input -vframes 1 -q:v 2 thumbnail.jpg
 ```
 
-### Step 5: 执行并报告
+### Step 4: 执行并报告
 
 1. 执行前向用户展示完整的 ffmpeg 命令
 2. 执行命令并显示进度
@@ -164,7 +150,7 @@ ffmpeg -ss START -to END -i "INPUT" -c:v libx264 -crf 23 -c:a aac -b:a 128k "OUT
 ffmpeg -ss START -to END -i "INPUT" -c:v copy -an "OUTPUT"
 ```
 
-### Step 6: 验证输出
+### Step 5: 验证输出
 
 裁剪完成后，验证输出：
 
