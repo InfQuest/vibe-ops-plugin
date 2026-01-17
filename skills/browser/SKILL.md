@@ -16,9 +16,6 @@ Browser automation that maintains page state across command executions. Write sm
 ## Prerequisites
 
 ```bash
-# Check uv installed (if NOT_INSTALLED, use install-app skill to install)
-which uv && uv --version || echo "NOT_INSTALLED"
-
 # Check browser server running (Max must be open)
 curl -s http://localhost:9222/ | head -1 || echo "SERVER_NOT_RUNNING"
 ```

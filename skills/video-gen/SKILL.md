@@ -10,7 +10,6 @@ description: 使用 AI 生成视频，支持 Veo/Sora 模型。Use when user wan
 ## Prerequisites
 
 1. `MAX_API_KEY` 环境变量（Max 自动注入）
-2. 需要安装 Python 和 uv（如果未安装，请使用 `install-app` skill 来安装）
 
 ## Supported Models
 
@@ -33,15 +32,7 @@ description: 使用 AI 生成视频，支持 Veo/Sora 模型。Use when user wan
 
 如果未设置，告诉用户：「请在 Max 设置中配置 Max API Key。」
 
-### Step 2: 检查 Python 和 uv 安装
-
-```bash
-which uv && uv --version || echo "NOT_INSTALLED"
-```
-
-如果未安装，使用 `install-app` skill 来安装 uv。
-
-### Step 3: 收集用户需求
+### Step 2: 收集用户需求
 
 **⚠️ 必须：使用 AskUserQuestion 工具收集用户的视频生成需求。不要跳过这一步。**
 
@@ -76,7 +67,7 @@ which uv && uv --version || echo "NOT_INSTALLED"
 6. **保存位置**：视频保存到哪里？
    - 建议默认：当前目录，文件名为 `generated_video_时间戳.mp4`
 
-### Step 4: 执行脚本
+### Step 3: 执行脚本
 
 使用 skill 目录下的 `video-gen.py` 脚本（需要 uv）：
 
@@ -106,13 +97,13 @@ uv run skills/video-gen/video-gen.py "veo-3.1" "一只金毛犬在海边奔跑�
 uv run skills/video-gen/video-gen.py "sora-2-pro" "让图片中的人物微笑并挥手" "1280x720" "4" "." "/path/to/image.jpg"
 ```
 
-### Step 5: 等待生成
+### Step 4: 等待生成
 
 视频生成通常需要 1-5 分钟，脚本会自动轮询状态并显示进度。告诉用户：
 
 「视频正在生成中，大约需要 1-5 分钟，请耐心等待...」
 
-### Step 6: 展示结果
+### Step 5: 展示结果
 
 生成完成后：
 

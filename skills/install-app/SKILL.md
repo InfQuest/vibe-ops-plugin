@@ -38,44 +38,15 @@ which brew
 
 安装脚本会先解释将要执行的操作，然后暂停等待用户确认后再继续。
 
-**安装后配置**（针对 Apple Silicon Mac）：
+### 4. 搜索软件包
+
+帮用户搜索正确的软件包名称。
+
+**注意**：所有 brew 命令都需要带上环境变量以使用国内镜像加速：
 
 ```bash
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-### 4. 配置国内镜像源（加速下载）
-
-向用户解释：
-- 默认的 Homebrew 服务器在国外，下载速度可能很慢
-- 配置国内镜像源可以大幅提升下载速度
-- 使用的是中国科学技术大学 (USTC) 的镜像，稳定可靠
-
-将以下配置添加到 shell 配置文件：
-
-```bash
-cat >> ~/.zprofile << 'EOF'
-
-# Homebrew 中科大镜像源
-export HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api"
-export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
-export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
-export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
-EOF
-```
-
-然后使配置生效：
-
-```bash
-source ~/.zprofile
-```
-
-### 5. 搜索软件包
-
-帮用户搜索正确的软件包名称：
-
-```bash
+HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api" \
+HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles" \
 brew search <软件名>
 ```
 
@@ -83,27 +54,31 @@ brew search <软件名>
 - **Formulae**：命令行工具
 - **Casks**：图形界面应用程序（大多数用户需要的）
 
-### 6. 安装软件
+### 5. 安装软件
 
-根据软件类型使用正确的命令：
+根据软件类型使用正确的命令（带镜像加速）：
 
 **图形界面应用（Cask）**：
 ```bash
+HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api" \
+HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles" \
 brew install --cask <软件名>
 ```
 
 **命令行工具（Formula）**：
 ```bash
+HOMEBREW_API_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles/api" \
+HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles" \
 brew install <软件名>
 ```
 
-### 7. 验证安装
+### 6. 验证安装
 
 安装完成后，帮助用户验证：
 - 对于 Cask 应用：告诉用户可以在「应用程序」文件夹或 Launchpad 中找到
 - 对于命令行工具：运行 `which <工具名>` 或 `<工具名> --version`
 
-### 8. 常见问题处理
+### 7. 常见问题处理
 
 **如果安装失败**：
 - 检查网络连接
@@ -117,18 +92,20 @@ brew install <软件名>
 
 ## 常用软件快速参考
 
-| 软件 | 安装命令 |
-|------|----------|
-| Chrome | `brew install --cask google-chrome` |
-| VS Code | `brew install --cask visual-studio-code` |
-| WeChat | `brew install --cask wechat` |
-| QQ | `brew install --cask qq` |
-| Notion | `brew install --cask notion` |
-| Slack | `brew install --cask slack` |
-| Zoom | `brew install --cask zoom` |
-| VLC | `brew install --cask vlc` |
-| Rectangle | `brew install --cask rectangle` |
-| 1Password | `brew install --cask 1password` |
+**注意**：执行时需要加上镜像环境变量前缀（见上方安装软件步骤）。
+
+| 软件 | 包名 |
+|------|------|
+| Chrome | `google-chrome` |
+| VS Code | `visual-studio-code` |
+| WeChat | `wechat` |
+| QQ | `qq` |
+| Notion | `notion` |
+| Slack | `slack` |
+| Zoom | `zoom` |
+| VLC | `vlc` |
+| Rectangle | `rectangle` |
+| 1Password | `1password` |
 
 ## 交互风格
 

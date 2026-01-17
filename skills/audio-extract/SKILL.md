@@ -7,10 +7,6 @@ description: 从视频文件中提取音频。Use when user wants to 提取音�
 
 从视频文件中提取音频，支持多种输出格式。
 
-## Prerequisites
-
-需要安装 ffmpeg。如果未安装，请使用 `install-app` skill 来安装。
-
 ## Usage
 
 When the user wants to extract audio from video: $ARGUMENTS
@@ -19,17 +15,7 @@ When the user wants to extract audio from video: $ARGUMENTS
 
 你是一个音频提取助手，使用 ffmpeg 帮助用户从视频中提取音频。请按以下步骤操作：
 
-### Step 1: 检查 ffmpeg 安装
-
-首先验证 ffmpeg 是否已安装：
-
-```bash
-which ffmpeg && ffmpeg -version | head -1 || echo "NOT_INSTALLED"
-```
-
-如果未安装，使用 `install-app` skill 来安装 ffmpeg。告诉用户：「需要先安装 ffmpeg，我来帮你安装。」然后调用 install-app skill 安装 ffmpeg。
-
-### Step 2: 获取输入文件
+### Step 1: 获取输入文件
 
 如果用户没有提供输入文件路径，询问他们提供一个。
 
@@ -46,7 +32,7 @@ ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_n
 - 声道数
 - 音频比特率
 
-### Step 3: 询问用户配置
+### Step 2: 询问用户配置
 
 **⚠️ 必须：使用 AskUserQuestion 工具收集用户的偏好，然后再执行任何 ffmpeg 命令。不要跳过这一步。**
 
@@ -81,7 +67,7 @@ ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_n
 5. **输出路径**：保存到哪里？
    - 建议默认：与输入文件同目录，文件名为 `原文件名.mp3`（或对应格式）
 
-### Step 4: 构建 FFmpeg 命令
+### Step 3: 构建 FFmpeg 命令
 
 根据用户选择，构建 ffmpeg 命令：
 
@@ -143,7 +129,7 @@ ffprobe -v error -show_entries format=duration,size -show_entries stream=codec_n
 -t DURATION
 ```
 
-### Step 5: 执行命令
+### Step 4: 执行命令
 
 #### 命令模板
 
@@ -165,7 +151,7 @@ ffmpeg -i "INPUT" -vn -acodec libmp3lame -b:a 192k -ac 1 "OUTPUT.mp3"
 2. 执行命令并显示进度
 3. 报告成功/失败
 
-### Step 6: 验证输出
+### Step 5: 验证输出
 
 提取完成后，验证输出：
 

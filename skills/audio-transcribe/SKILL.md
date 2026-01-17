@@ -9,8 +9,7 @@ description: 使用 Whisper 将音频/视频转换为文字，支持词级别时
 
 ## Prerequisites
 
-1. 需要安装 Python 3.12
-2. 需要安装 uv（如果未安装，请使用 `install-app` skill 来安装）
+需要 Python 3.12（uv 会自动管理）。
 
 ## Usage
 
@@ -20,17 +19,7 @@ When the user wants to transcribe audio/video: $ARGUMENTS
 
 你是一个语音转文字助手，使用 WhisperX 帮助用户将音频转换为文字。请按以下步骤操作：
 
-### Step 1: 检查 uv 安装
-
-首先验证 uv 是否已安装：
-
-```bash
-which uv && uv --version || echo "NOT_INSTALLED"
-```
-
-如果未安装，使用 `install-app` skill 来安装 uv。告诉用户：「需要先安装 uv，我来帮你安装。」然后调用 install-app skill 安装 uv。
-
-### Step 2: 获取输入文件
+### Step 1: 获取输入文件
 
 如果用户没有提供输入文件路径，询问他们提供一个。
 
@@ -44,7 +33,7 @@ which uv && uv --version || echo "NOT_INSTALLED"
 ls -la "$INPUT_FILE"
 ```
 
-### Step 3: 询问用户配置
+### Step 2: 询问用户配置
 
 **⚠️ 必须：使用 AskUserQuestion 工具收集用户的偏好。不要跳过这一步。**
 
@@ -81,7 +70,7 @@ ls -la "$INPUT_FILE"
 5. **输出路径**：保存到哪里？
    - 建议默认：与输入文件同目录，文件名为 `原文件名.txt`（或对应格式）
 
-### Step 4: 执行转录脚本
+### Step 3: 执行转录脚本
 
 使用 skill 目录下的 `transcribe.py` 脚本：
 
@@ -116,7 +105,7 @@ uv run skills/audio-transcribe/transcribe.py "speech.mp3" -m medium -f json -o "
 uv run skills/audio-transcribe/transcribe.py "audio.mp3" --no-vad -o "transcript.txt"
 ```
 
-### Step 5: 展示结果
+### Step 4: 展示结果
 
 转录完成后：
 
