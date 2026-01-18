@@ -10,7 +10,7 @@ description: 使用 AI 生成图片，支持多种模型和风格。Use when use
 ## Prerequisites
 
 1. `MAX_API_KEY` 环境变量（Max 自动注入）
-2. 需要安装 Node.js（如果未安装，请使用 `install-app` skill 来安装）
+2. 需要安装 Bun（Max 内置，无需额外安装）
 
 ## Instructions
 
@@ -26,13 +26,13 @@ description: 使用 AI 生成图片，支持多种模型和风格。Use when use
 
 如果未设置，告诉用户：「请在 Max 设置中配置 Max API Key。」
 
-### Step 2: 检查 Node.js 安装
+### Step 2: 检查 Bun 安装
 
 ```bash
-which node && node --version || echo "NOT_INSTALLED"
+which bun && bun --version || echo "NOT_INSTALLED"
 ```
 
-如果未安装，使用 `install-app` skill 来安装 Node.js。告诉用户：「需要先安装 Node.js，我来帮你安装。」然后调用 install-app skill 安装 node。
+Bun 已内置于 Max 中，通常不需要额外安装。如果未找到，告诉用户重启 Max 应用。
 
 ### Step 3: 收集用户需求
 
@@ -79,7 +79,7 @@ which node && node --version || echo "NOT_INSTALLED"
 使用 skill 目录下的 `image-gen.js` 脚本：
 
 ```bash
-node /path/to/skills/image-gen/image-gen.js "MODEL" "PROMPT" "ASPECT_RATIO" NUM_IMAGES "OUTPUT_DIR" "INPUT_IMAGE"
+bun /path/to/skills/image-gen/image-gen.js "MODEL" "PROMPT" "ASPECT_RATIO" NUM_IMAGES "OUTPUT_DIR" "INPUT_IMAGE"
 ```
 
 参数说明：
@@ -92,12 +92,12 @@ node /path/to/skills/image-gen/image-gen.js "MODEL" "PROMPT" "ASPECT_RATIO" NUM_
 
 示例（纯文本生成）：
 ```bash
-node skills/image-gen/image-gen.js "gemini-pro" "一只在星空下的猫" "1:1" 1 "."
+bun skills/image-gen/image-gen.js "gemini-pro" "一只在星空下的猫" "1:1" 1 "."
 ```
 
 示例（图片编辑）：
 ```bash
-node skills/image-gen/image-gen.js "gemini-pro" "把背景换成海边" "1:1" 1 "." "/path/to/input.jpg"
+bun skills/image-gen/image-gen.js "gemini-pro" "把背景换成海边" "1:1" 1 "." "/path/to/input.jpg"
 ```
 
 ### Step 5: 展示结果
@@ -131,7 +131,7 @@ node skills/image-gen/image-gen.js "gemini-pro" "把背景换成海边" "1:1" 1 
 用户：帮我生成一张图片，一只在星空下的猫
 
 助手：
-1. 检查环境变量和 Node.js ✓
+1. 检查环境变量和 Bun ✓
 2. 使用 AskUserQuestion 询问用户偏好
 3. 根据选择执行脚本
 4. 展示生成的图片

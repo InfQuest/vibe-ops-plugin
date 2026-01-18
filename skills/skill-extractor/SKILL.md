@@ -62,7 +62,7 @@ description: 从当前会话中提取经验，自动生成可复用的 Claude Co
 
 **脚本语言选择：**
 - **优先使用 Python**，采用 uv script 格式（内联依赖声明）
-- 仅在必要时使用 Node.js（如需要特定 npm 包）
+- 需要 JavaScript 时使用 Bun（Max 内置，比 Node.js 更快）
 
 **Python uv script 模板：**
 ```python

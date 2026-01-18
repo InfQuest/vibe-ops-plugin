@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
 const https = require('https');
 const fs = require('fs');
@@ -65,7 +65,7 @@ function getMimeType(filePath) {
 
 // Check args
 if (!MEDIA_PATH) {
-  console.error('Usage: node media-understand.js <media_path_or_youtube_url> [prompt] [language]');
+  console.error('Usage: bun media-understand.js <media_path_or_youtube_url> [prompt] [language]');
   console.error('');
   console.error('Supported formats:');
   console.error('  Images: jpg, jpeg, png, gif, webp');
