@@ -1,8 +1,7 @@
 #!/usr/bin/env bun
 
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // Config
 const API_KEY = process.env.MAX_API_KEY;
@@ -168,78 +167,54 @@ function buildContent() {
   return content;
 }
 
-// Build request
-const requestData = JSON.stringify({
-  model: MODEL_ID,
-  messages: [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: buildContent() }
-  ],
-  max_tokens: 4096
-});
+// 使用 fetch 调用 API
+try {
+  const response = await fetch('https://internal.infquest.com/api/openrouter/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_KEY}`
+    },
+    body: JSON.stringify({
+      model: MODEL_ID,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: buildContent() }
+      ],
+      max_tokens: 4096
+    })
+  });
 
-const options = {
-  hostname: 'internal.infquest.com',
-  port: 443,
-  path: '/api/openrouter/v1/chat/completions',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Content-Length': Buffer.byteLength(requestData),
-    'Authorization': `Bearer ${API_KEY}`
+  const data = await response.json();
+
+  if (data.error) {
+    console.error(`Error: ${data.error.message || JSON.stringify(data.error)}`);
+    process.exit(1);
   }
-};
 
-const req = https.request(options, (res) => {
-  let data = '';
+  if (!data.choices || data.choices.length === 0) {
+    console.error('Error: No response from API');
+    console.error('Response:', JSON.stringify(data, null, 2));
+    process.exit(1);
+  }
 
-  res.on('data', (chunk) => {
-    data += chunk;
-  });
+  const content = data.choices[0].message.content;
 
-  res.on('end', () => {
-    try {
-      const response = JSON.parse(data);
+  console.log('━'.repeat(50));
+  console.log('📋 Analysis Result:');
+  console.log('━'.repeat(50));
+  console.log('');
+  console.log(content);
+  console.log('');
+  console.log('━'.repeat(50));
 
-      if (response.error) {
-        console.error(`Error: ${response.error.message || JSON.stringify(response.error)}`);
-        process.exit(1);
-      }
+  if (data.usage) {
+    console.log(`📊 Tokens: input ${data.usage.prompt_tokens}, output ${data.usage.completion_tokens}`);
+  }
 
-      if (!response.choices || response.choices.length === 0) {
-        console.error('Error: No response from API');
-        console.error('Response:', JSON.stringify(response, null, 2));
-        process.exit(1);
-      }
+  console.log('✅ Analysis complete');
 
-      const content = response.choices[0].message.content;
-
-      console.log('━'.repeat(50));
-      console.log('📋 Analysis Result:');
-      console.log('━'.repeat(50));
-      console.log('');
-      console.log(content);
-      console.log('');
-      console.log('━'.repeat(50));
-
-      if (response.usage) {
-        console.log(`📊 Tokens: input ${response.usage.prompt_tokens}, output ${response.usage.completion_tokens}`);
-      }
-
-      console.log('✅ Analysis complete');
-
-    } catch (e) {
-      console.error('Error parsing response:', e.message);
-      console.error('Raw response:', data.substring(0, 500));
-      process.exit(1);
-    }
-  });
-});
-
-req.on('error', (e) => {
+} catch (e) {
   console.error(`Request failed: ${e.message}`);
   process.exit(1);
-});
-
-req.write(requestData);
-req.end();
+}
