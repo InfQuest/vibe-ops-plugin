@@ -18,12 +18,12 @@ description: 使用 AI 理解和分析多媒体内容（图片、视频、音频
 ## Prerequisites
 
 1. `MAX_API_KEY` 环境变量（Max 自动注入）
-2. Node.js installed
+2. Bun 1.0+（Max v0.0.27+ 内置，无需额外安装）
 
 ## Usage
 
 ```bash
-node skills/media-understand/media-understand.js <media_path_or_url> [prompt] [language]
+bun skills/media-understand/media-understand.js <media_path_or_url> [prompt] [language]
 ```
 
 **Arguments:**
@@ -37,39 +37,39 @@ node skills/media-understand/media-understand.js <media_path_or_url> [prompt] [l
 
 ```bash
 # Describe image
-node skills/media-understand/media-understand.js ./photo.jpg "请描述这张图片" chinese
+bun skills/media-understand/media-understand.js ./photo.jpg "请描述这张图片" chinese
 
 # OCR - Extract text
-node skills/media-understand/media-understand.js ./screenshot.png "识别图片中的所有文字" chinese
+bun skills/media-understand/media-understand.js ./screenshot.png "识别图片中的所有文字" chinese
 
 # Answer question about image
-node skills/media-understand/media-understand.js ./chart.png "这个图表显示了什么趋势？" chinese
+bun skills/media-understand/media-understand.js ./chart.png "这个图表显示了什么趋势？" chinese
 ```
 
 ### Video Analysis
 
 ```bash
 # YouTube video summary
-node skills/media-understand/media-understand.js "https://youtube.com/watch?v=xxx" "总结这个视频的主要内容" chinese
+bun skills/media-understand/media-understand.js "https://youtube.com/watch?v=xxx" "总结这个视频的主要内容" chinese
 
 # Local video analysis
-node skills/media-understand/media-understand.js ./video.mp4 "视频中发生了什么？" chinese
+bun skills/media-understand/media-understand.js ./video.mp4 "视频中发生了什么？" chinese
 
 # Timestamp-based question
-node skills/media-understand/media-understand.js "https://youtu.be/xxx" "视频 2:30 处讲了什么？" chinese
+bun skills/media-understand/media-understand.js "https://youtu.be/xxx" "视频 2:30 处讲了什么？" chinese
 ```
 
 ### Audio Analysis
 
 ```bash
 # Transcribe audio
-node skills/media-understand/media-understand.js ./recording.mp3 "请转录这段音频" chinese
+bun skills/media-understand/media-understand.js ./recording.mp3 "请转录这段音频" chinese
 
 # Summarize podcast
-node skills/media-understand/media-understand.js ./podcast.m4a "总结这段播客的要点" chinese
+bun skills/media-understand/media-understand.js ./podcast.m4a "总结这段播客的要点" chinese
 
 # Detect speakers
-node skills/media-understand/media-understand.js ./meeting.wav "识别不同的说话人并整理他们说的内容" chinese
+bun skills/media-understand/media-understand.js ./meeting.wav "识别不同的说话人并整理他们说的内容" chinese
 ```
 
 ## Common Prompts
