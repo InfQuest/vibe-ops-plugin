@@ -10,7 +10,7 @@ description: 使用 AI 生成图片，支持多种模型和风格。Use when use
 ## Prerequisites
 
 1. `MAX_API_KEY` 环境变量（Max 自动注入）
-2. 需要安装 Bun（Max 内置，无需额外安装）
+2. Bun 1.0+（Max v0.0.27+ 内置，无需额外安装）
 
 ## Instructions
 
